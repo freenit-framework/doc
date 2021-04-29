@@ -1,0 +1,14 @@
+site_name: Freenit
+theme:
+  name: material
+  logo: img/logo.png
+  favicon: img/logo.png
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.snippets
+plugins:
+  - search
+  - awesome-pages

@@ -21,11 +21,7 @@ import { api } from 'api'
 
 class App extends React.Component {
   state = {
-    users: {
-      data: [],
-      total: 0,
-      page: 0,
-    }
+    users: [],
   }
 
   constructor(props) {
@@ -43,7 +39,14 @@ class App extends React.Component {
   }
 
   render() {
-    return <div>App</div>
+    return (
+      <div>
+        <h1>Freenit User List</h1>
+        {this.state.users.map(user => (
+          <div key={user.id}>{user.email}</div>
+        ))}
+      </div>
+    )
   }
 }
 ```
@@ -59,9 +62,9 @@ API also has 3 objects, one for `auth`, `me` and `user`. That means you can
 call
 ```js
 await api.auth.login('admin@example.com', 'Sekrit')
-await api.user.patch(<id>, { email: 'something@example.com' })
+await api.me.patch({ email: 'something@example.com' })
 ```
-to login and change email to user with ID `<id>`.
+to login and change your email.
 
 ## API Reference
 This is the full list of supported calls:

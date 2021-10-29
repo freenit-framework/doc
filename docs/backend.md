@@ -13,6 +13,13 @@ It will create initial DB migration, apply it and start
 [local development server](http://localhost:5000/api/v1) so you can check if 
 everything is OK.
 
+You will get just a few basic tests on initialization. You can run them with:
+```bash
+bin/test.sh
+```
+
+To write more tests, add `test_<name>.py` to `tests` directory.
+
 
 ## Model
 Let's say you want to add the simplest model for blog post with only title and

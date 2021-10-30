@@ -9,3 +9,17 @@ code corresponding to that design.
 To see designer in action please watch
 [Designer Intro](https://www.youtube.com/watch?v=l1CD-84fs8k&list=PLpeJ1COhO5ak9X3UE85mlFZrrIxiPynKy) 
 and [Practical Designer](https://www.youtube.com/watch?v=5aapP8A0CHI&list=PLpeJ1COhO5ak9X3UE85mlFZrrIxiPynKy&index=2)
+
+There are 3 tabs that show current design and two modes for editing. Available tabs:
+* Design (where you'll DnD, edits and rearanging)
+* Load/Save (where you can save your work and load it some other day to continue your work on design)
+* Export (converts design to React code)
+
+Modes are:
+* Add - If you drag component A to component B, A will become B's child
+* Rearange - If you drag component A to component B, B has parent C, A will become C's child and placed right before B
+
+To enter `rearange` mode, press `Shift` key. To exit that mode and switch back to `add`, release `Shift`.
+
+## Source
+[Github](https://github.com/freenit-framework/designer)

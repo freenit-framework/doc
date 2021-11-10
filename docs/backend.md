@@ -140,13 +140,30 @@ class BlogListAPI():
         blog.user = user
         await blog.save()
         return blog
-
 ```
 Note that response for POST method is given as attribute to `@route`. Although
 method also has return type hinting, if given, responses object has priority in
 denoting how to serialize object to JSON. It is the same as FastAPI's 
 `response_model` argument and it exists for situations when type hinting is not
 expressive enough.
+
+If you need to include and/or exclude fields, you can use `get_pydantic()` and
+`exclude/include` to get what you want. For example:
+```py
+@route('/blogs', tags=['blog'])
+class BlogListAPI():
+    @staticmethod
+    async def post(
+        blog: Blog,
+        user_data: auth.UserDB = Depends(current_user.active),
+    ) -> Blog.get_pydantic(exclude={'id'}):
+        user = await auth.UserModel.objects.get(id=user_data.id)
+        blog.user = user
+        await blog.save()
+        return blog
+```
+Of course, `Blog.get_pydantic()` can be used in type hinting as well as argument 
+to `responses` object in `@route`.
 
 
 ## DB Migration

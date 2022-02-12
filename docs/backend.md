@@ -32,6 +32,7 @@ from freenit.models.base import BaseModel
 from freenit.models.metaclass import AllOptional
 
 config = getConfig()
+auth = config.getUser()
 
 
 class Blog(BaseModel):
@@ -41,6 +42,7 @@ class Blog(BaseModel):
     id: int = ormar.Integer(primary_key=True)
     title: str = ormar.String(max_length=1024)
     content: str = ormar.Text()
+    user: auth.UserModel = ormar.ForeignKey(auth.UserModel)
     
 
 
@@ -122,9 +124,46 @@ itself has great support for function based endpoints, the idea was to make
 it possible for developer to choose between functions and classes. With Freenit
 you can write any style you want. Also note that class methods are static 
 (decorated with `@staticmethod`) because API classes will never create an object. 
-Or in other words, methods are going to be called on class, not object.  Also, 
-return value type hinting is important. It will tell Freenit what object is 
-returned from the method and how to convert it to JSON.
+Or in other words, methods are going to be called on class, not object. Return 
+value type hinting is important. It will tell Freenit what object is returned 
+from the method and how to convert it to JSON. Alternatively, you can use 
+`responses` attribute in `@route` like the following:
+```py
+@route('/blogs', tags=['blog'], responses={'post': Blog})
+class BlogListAPI():
+    @staticmethod
+    async def post(
+        blog: Blog,
+        user_data: auth.UserDB = Depends(current_user.active),
+    ) -> Blog:
+        user = await auth.UserModel.objects.get(id=user_data.id)
+        blog.user = user
+        await blog.save()
+        return blog
+```
+Note that response for POST method is given as attribute to `@route`. Although
+method also has return type hinting, if given, responses object has priority in
+denoting how to serialize object to JSON. It is the same as FastAPI's 
+`response_model` argument and it exists for situations when type hinting is not
+expressive enough.
+
+If you need to include and/or exclude fields, you can use `get_pydantic()` and
+`exclude/include` to get what you want. For example:
+```py
+@route('/blogs', tags=['blog'])
+class BlogListAPI():
+    @staticmethod
+    async def post(
+        blog: Blog,
+        user_data: auth.UserDB = Depends(current_user.active),
+    ) -> Blog.get_pydantic(exclude={'id'}):
+        user = await auth.UserModel.objects.get(id=user_data.id)
+        blog.user = user
+        await blog.save()
+        return blog
+```
+Of course, `Blog.get_pydantic()` can be used in type hinting as well as argument 
+to `responses` object in `@route`.
 
 
 ## DB Migration
@@ -142,6 +181,13 @@ It will create new migration file in `alembic/versions` and format it with
 black. Next time you run `bin/devel.sh` that migration will be applied.
 
 Now you should see Blog endpoint in [Swagger](http://localhost:5000/api/v1)
+
+## Used Liraries
+* [Starlette](https://www.starlette.io/)
+* [FastAPI](https://fastapi.tiangolo.com/)
+* [FastAPI Users](https://github.com/fastapi-users/fastapi-users)
+* [Ormar](https://github.com/collerek/ormar)
+* [Uvicorn](https://www.uvicorn.org/)
 
 ## Source
 [Github](https://github.com/freenit-framework/backend)

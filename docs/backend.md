@@ -185,7 +185,6 @@ Now you should see Blog endpoint in [Swagger](http://localhost:5000/api/v1)
 ## Used Liraries
 * [Starlette](https://www.starlette.io/)
 * [FastAPI](https://fastapi.tiangolo.com/)
-* [FastAPI Users](https://github.com/fastapi-users/fastapi-users)
 * [Ormar](https://github.com/collerek/ormar)
 * [Uvicorn](https://www.uvicorn.org/)
 

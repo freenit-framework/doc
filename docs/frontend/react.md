@@ -1,8 +1,8 @@
-# Frontend
+# React
 
 ## Install package
 ```bash
-yarn add @freenit-framework/axios
+freenit.sh react <project name>
 ```
 
 ## Initialize API object

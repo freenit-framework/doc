@@ -30,9 +30,9 @@ import ormar
 from freenit.config import getConfig
 from freenit.models.base import BaseModel
 from freenit.models.metaclass import AllOptional
+from freenit.models.user import User
 
 config = getConfig()
-auth = config.getUser()
 
 
 class Blog(BaseModel):
@@ -42,7 +42,7 @@ class Blog(BaseModel):
     id: int = ormar.Integer(primary_key=True)
     title: str = ormar.String(max_length=1024)
     content: str = ormar.Text()
-    user: auth.UserModel = ormar.ForeignKey(auth.UserModel)
+    user: User = ormar.ForeignKey(User)
     
 
 
@@ -62,28 +62,24 @@ In `api` directory of your project add `blog.py` with the following content:
 from typing import List
 
 import ormar
-from fastapi import HTTPException
-from freenit.config import getConfig
+from fastapi import Depends, HTTPException
+from freenit.decorators import description
+from freenit.models.user import User
+from freenit.permissions import user_perms
 from freenit.router import route
 
 from ..models.blog import Blog, BlogOptional
-
-config = getConfig()
-auth = config.getUser()
 
 
 @route('/blogs', tags=['blog'])
 class BlogListAPI():
     @staticmethod
+    @description("Get blog list")
     async def get() -> List[Blog]:
         return await Blog.objects.all()
 
     @staticmethod
-    async def post(
-        blog: Blog,
-        user_data: auth.UserDB = Depends(current_user.active),
-    ) -> Blog:
-        user = await auth.UserModel.objects.get(id=user_data.id)
+    async def post(blog: Blog, user: User = Depends(user_perms)) -> Blog:
         blog.user = user
         await blog.save()
         return blog
@@ -132,11 +128,7 @@ from the method and how to convert it to JSON. Alternatively, you can use
 @route('/blogs', tags=['blog'], responses={'post': Blog})
 class BlogListAPI():
     @staticmethod
-    async def post(
-        blog: Blog,
-        user_data: auth.UserDB = Depends(current_user.active),
-    ) -> Blog:
-        user = await auth.UserModel.objects.get(id=user_data.id)
+    async def post(blog: Blog, user: User = Depends(user_perms)):
         blog.user = user
         await blog.save()
         return blog
@@ -155,9 +147,8 @@ class BlogListAPI():
     @staticmethod
     async def post(
         blog: Blog,
-        user_data: auth.UserDB = Depends(current_user.active),
+        user: User = Depends(user_perms),
     ) -> Blog.get_pydantic(exclude={'id'}):
-        user = await auth.UserModel.objects.get(id=user_data.id)
         blog.user = user
         await blog.save()
         return blog

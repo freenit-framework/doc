@@ -123,3 +123,6 @@ const blog = {
 
 export default blog
 ```
+
+You can use `blog.$detail` and `blog.$list` in `.svelte` files like any other
+store.

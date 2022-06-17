@@ -120,10 +120,15 @@ itself has great support for function based endpoints, the idea was to make
 it possible for developer to choose between functions and classes. With Freenit
 you can write any style you want. Also note that class methods are static 
 (decorated with `@staticmethod`) because API classes will never create an object. 
-Or in other words, methods are going to be called on class, not object. Return 
-value type hinting is important. It will tell Freenit what object is returned 
-from the method and how to convert it to JSON. Alternatively, you can use 
-`responses` attribute in `@route` like the following:
+Or in other words, methods are going to be called on class, not object. Order of
+decorators is important and `@staticmethod` has to be the top one. The
+`@description` is not mandatory, but highly preferable. If no `@description` is
+given, default is to take name of the method and first tag and use it as
+description.
+
+Return value type hinting is important. It will tell Freenit what object is
+returned from the method and how to convert it to JSON. Alternatively, you can
+use `responses` attribute in `@route` like the following:
 ```py
 @route('/blogs', tags=['blog'], responses={'post': Blog})
 class BlogListAPI():
@@ -213,7 +218,8 @@ user may be, second one is list of groups in which user has to be. In short if
 user is assigned to at least one group from first list and all groups in the
 second list. Default values for both are `[]`, which means not to check groups
 at all. First argument is called `groups`, second one `allof`, in case you need
-to set only one of them.
+to set only one of them. In the above example the user can be in either
+`group 1` or `group 2` but has to be in both, `group 3` and `group 4`.
 
 ## Used Liraries
 * [Starlette](https://www.starlette.io/)

@@ -173,11 +173,55 @@ black. Next time you run `bin/devel.sh` that migration will be applied.
 
 Now you should see Blog endpoint in [Swagger](http://localhost:5000/api/v1)
 
+
+## Permissions
+FastAPI has dependency injection which is a short way of saying that some
+arguments to endpoint functions will not come from REST API. You already saw
+`user_perm` before, but let's say you want different permissions for an
+endpoint.
+
+```py
+from freenit.auth import permissions
+
+my_perms = permissions()
+```
+
+That creates default permissions, which gives an active user from DB. You can
+use it as dependency like so:
+
+```py
+@route('/blogs', tags=['blog'])
+class BlogListAPI():
+    @staticmethod
+    async def post(blog: Blog, user: User = Depends(my_perms)) -> Blog:
+        blog.user = user
+        await blog.save()
+        return blog
+```
+
+As a matter of fact, that's how default `user_perm` is defined. The `permissions`
+function accept two additional arguments to help you with that.
+
+```py
+from freenit.auth import permissions
+
+my_perms = permissions(['group 1', 'group 2'], ['group 3', 'group 4'])
+```
+
+Both arguments are lists of group names. First one is list of groups in which
+user may be, second one is list of groups in which user has to be. In short if
+user is assigned to at least one group from first list and all groups in the
+second list. Default values for both are `[]`, which means not to check groups
+at all. First argument is called `groups`, second one `allof`, in case you need
+to set only one of them.
+
 ## Used Liraries
 * [Starlette](https://www.starlette.io/)
 * [FastAPI](https://fastapi.tiangolo.com/)
 * [Ormar](https://github.com/collerek/ormar)
 * [Uvicorn](https://www.uvicorn.org/)
+* [Passlib](https://passlib.readthedocs.io/)
+* [JWT](https://github.com/jpadilla/pyjwt)
 
 ## Source
 [Github](https://github.com/freenit-framework/backend)

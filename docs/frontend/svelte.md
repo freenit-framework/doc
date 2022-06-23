@@ -34,7 +34,7 @@ class BlogListStore {
   async create(blogData) {
     try {
       const response = await fetch(
-        '/api/v1/blogs', 
+        '/api/v1/blogs',
         {method: 'POST', body: blogData},
       )
       const data = await.response.json()
@@ -126,3 +126,8 @@ export default blog
 
 You can use `blog.$detail` and `blog.$list` in `.svelte` files like any other
 store.
+
+!!! note
+    Just like backend, store has two classes and five methods in total. One
+    class is for list of blog posts, the other is for single blog post. Class
+    and method names corespond to those in the backend.

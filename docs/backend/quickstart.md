@@ -1,4 +1,4 @@
-# Backend
+# Quickstart
 
 ## Initialize the Project
 ```bash
@@ -51,7 +51,7 @@ class BlogOptional(Blog, metaclass=AllOptional):
 ```
 
 Please note two things: `BaseModel` is Freenit class not Ormar and 
-`BlogOptional` is for PATCH method so all it's fields are the same as `Blog`
+`BlogOptional` is for PATCH method so all its fields are the same as `Blog`
 except they are optional. The reason for this is that Ormar models are not just
 for DB operations, but for validating JSON input and parsing objects into JSON.
 
@@ -123,8 +123,8 @@ you can write any style you want. Also note that class methods are static
 Or in other words, methods are going to be called on class, not object. Order of
 decorators is important and `@staticmethod` has to be the top one. The
 `@description` is not mandatory, but highly preferable. If no `@description` is
-given, default is to take name of the method and first tag and use it as
-description.
+given, default is to concatenate name of the method and first tag and use them
+as description.
 
 Return value type hinting is important. It will tell Freenit what object is
 returned from the method and how to convert it to JSON. Alternatively, you can
@@ -138,22 +138,19 @@ class BlogListAPI():
         await blog.save()
         return blog
 ```
-Note that response for POST method is given as attribute to `@route`. Although
-method also has return type hinting, if given, responses object has priority in
-denoting how to serialize object to JSON. It is the same as FastAPI's 
-`response_model` argument and it exists for situations when type hinting is not
-expressive enough.
+Note that response for POST method is given as attribute to `@route`. If method
+also has return type hinting, responses object has priority in denoting how to
+serialize object to JSON. It is the same as FastAPI's `response_model` argument
+and it exists for situations when type hinting is not expressive enough.
 
 If you need to include and/or exclude fields, you can use `get_pydantic()` and
 `exclude/include` to get what you want. For example:
 ```py
+BlogReturn = Blog.get_pydantic(exclude={'id'}):
 @route('/blogs', tags=['blog'])
 class BlogListAPI():
     @staticmethod
-    async def post(
-        blog: Blog,
-        user: User = Depends(user_perms),
-    ) -> Blog.get_pydantic(exclude={'id'}):
+    async def post(blog: Blog, user: User = Depends(user_perms)) -> BlogReturn:
         blog.user = user
         await blog.save()
         return blog
@@ -205,29 +202,19 @@ class BlogListAPI():
 ```
 
 As a matter of fact, that's how default `user_perm` is defined. The `permissions`
-function accept two additional arguments to help you with that.
+function accept two additional arguments to help you express more complex
+permissions.
 
 ```py
 from freenit.auth import permissions
 
-my_perms = permissions(['group 1', 'group 2'], ['group 3', 'group 4'])
+my_perms = permissions(['role 1', 'role 2'], ['role 3', 'role 4'])
 ```
 
-Both arguments are lists of group names. First one is list of groups in which
-user may be, second one is list of groups in which user has to be. In short if
-user is assigned to at least one group from first list and all groups in the
-second list. Default values for both are `[]`, which means not to check groups
-at all. First argument is called `groups`, second one `allof`, in case you need
+Both arguments are lists of role names. First one is list of roles in which
+user may be, second one is list of roles in which user has to be. In short if
+user is assigned to at least one role from first list and all roles in the
+second list. Default values for both are `[]`, which means not to check roles
+at all. First argument is called `roles`, second one `allof`, in case you need
 to set only one of them. In the above example the user can be in either
-`group 1` or `group 2` but has to be in both, `group 3` and `group 4`.
-
-## Used Liraries
-* [Starlette](https://www.starlette.io/)
-* [FastAPI](https://fastapi.tiangolo.com/)
-* [Ormar](https://github.com/collerek/ormar)
-* [Uvicorn](https://www.uvicorn.org/)
-* [Passlib](https://passlib.readthedocs.io/)
-* [JWT](https://github.com/jpadilla/pyjwt)
-
-## Source
-[Github](https://github.com/freenit-framework/backend)
+`role 1` or `role 2` but has to be in both, `role 3` and `role 4`.

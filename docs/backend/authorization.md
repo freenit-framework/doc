@@ -7,16 +7,11 @@ import ormar
 
 from freenit.auth import verify
 from freenit.config import getConfig
-from freenit.models.metaclass import AllOptional
-from freenit.models.ormar.base import OrmarBaseModel, OrmarUserMixin
+from freenit.models.ormar.base import OrmarBaseModel, OrmarUserMixin, generate_optional, ormar_config
 from freenit.models.role import Role
 
-config = getConfig()
-
-
 class User(OrmarBaseModel, OrmarUserMixin):
-    class Meta(config.meta):
-        tablename = "users"
+    ormar_config = ormar_config.copy()
 
     roles = ormar.ManyToMany(Role)
 
@@ -24,8 +19,7 @@ class User(OrmarBaseModel, OrmarUserMixin):
         return verify(password, self.password)
 
 
-class UserOptional(User, metaclass=AllOptional):
-    pass
+UserOptional = generate_optional(User)
 ```
 
 If you need a custom User model, you can copy/paste that code and add any field
@@ -35,8 +29,7 @@ should look like this:
 
 ```py
 class User(OrmarBaseModel, OrmarUserMixin):
-    class Meta(config.meta):
-        tablename = "users"
+    ormar_config = ormar_config.copy()
 
     roles = ormar.ManyToMany(Role, unique=True)
     nickname = ormar.Text()

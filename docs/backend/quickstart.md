@@ -27,17 +27,13 @@ contents. In your project's `models` directory you need to create `blog.py`:
 ```py
 import ormar
 
-from freenit.config import getConfig
 from freenit.models.base import BaseModel
-from freenit.models.metaclass import AllOptional
+from freenit.models.ormar.base import generate_optional, ormar_config
 from freenit.models.user import User
-
-config = getConfig()
 
 
 class Blog(BaseModel):
-    class Meta(config.meta):
-        pass
+    ormar_config = ormar_config.copy()
 
     id: int = ormar.Integer(primary_key=True)
     title: str = ormar.String(max_length=1024)
@@ -46,8 +42,7 @@ class Blog(BaseModel):
     
 
 
-class BlogOptional(Blog, metaclass=AllOptional):
-    pass
+BlogOptional = generate_optional(Blog)
 ```
 
 Please note two things: `BaseModel` is Freenit class not Ormar and 

@@ -5,7 +5,7 @@
 python -m venv ~/.virtualenvs/myproject
 source ~/.virtualenvs/myproject/bin/activate
 pip install freenit[dev]
-freenit.sh myproject
+freenit # you'll be prompted for the name of your project
 cd myproject
 bin/devel.sh
 ```
@@ -27,12 +27,11 @@ contents. In your project's `models` directory you need to create `blog.py`:
 ```py
 import ormar
 
-from freenit.models.base import BaseModel
-from freenit.models.ormar.base import generate_optional, ormar_config
+from freenit.models.ormar.base import OrmarBaseModel, generate_optional, ormar_config
 from freenit.models.user import User
 
 
-class Blog(BaseModel):
+class Blog(OrmarBaseModel):
     ormar_config = ormar_config.copy()
 
     id: int = ormar.Integer(primary_key=True)
@@ -183,8 +182,8 @@ from freenit.auth import permissions
 my_perms = permissions()
 ```
 
-That creates default permissions, which gives an active user from DB. You can
-use it as dependency like so:
+That creates default permissions, which permits access only to the active user
+(the one sending the request). You can use it as dependency like so:
 
 ```py
 @route('/blogs', tags=['blog'])
@@ -208,8 +207,9 @@ my_perms = permissions(['role 1', 'role 2'], ['role 3', 'role 4'])
 
 Both arguments are lists of role names. First one is list of roles in which
 user may be, second one is list of roles in which user has to be. In short if
-user is assigned to at least one role from first list and all roles in the
-second list. Default values for both are `[]`, which means not to check roles
-at all. First argument is called `roles`, second one `allof`, in case you need
-to set only one of them. In the above example the user can be in either
-`role 1` or `role 2` but has to be in both, `role 3` and `role 4`.
+user is assigned to at least one role from the first list and all roles in the
+second list, access is granted. Default values for both are `[]`, which means
+not to check roles at all. First argument is called `roles`, second one `allof`,
+in case you need to set only one of them use named arguments. In the above
+example the user can be in either `role 1` or `role 2` but has to be in both,
+`role 3` and `role 4`.

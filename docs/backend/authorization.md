@@ -6,7 +6,6 @@ The default Freenit User is defined as this:
 import ormar
 
 from freenit.auth import verify
-from freenit.config import getConfig
 from freenit.models.ormar.base import OrmarBaseModel, OrmarUserMixin, generate_optional, ormar_config
 from freenit.models.role import Role
 

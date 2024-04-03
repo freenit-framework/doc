@@ -17,12 +17,7 @@ framework where axios can be used.
 [Source on Github](https://github.com/freenit-framework/backend)
 
 ### Frontend
+* [Svelte](https://svelte.dev/)
 * [Chota CSS](https://jenil.github.io/chota/)
 * [Material design icons](https://github.com/phphe/mdi-js)
 
-Frontend supports [Svelte](https://svelte.dev/) and [React](https://reactjs.org/).
-React stack also uses following libraries:
-
-* [React Router](https://reactrouter.com/)
-* [Axios](https://axios-http.com/)
-* [MobX](https://mobx.js.org/)

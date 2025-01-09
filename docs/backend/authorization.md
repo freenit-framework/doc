@@ -6,7 +6,7 @@ The default Freenit User is defined as this:
 import ormar
 
 from freenit.auth import verify
-from freenit.models.ormar.base import OrmarBaseModel, OrmarUserMixin, generate_optional, ormar_config
+from freenit.models.sql.base import OrmarBaseModel, OrmarUserMixin, make_optional, ormar_config
 from freenit.models.role import Role
 
 class User(OrmarBaseModel, OrmarUserMixin):
@@ -18,7 +18,11 @@ class User(OrmarBaseModel, OrmarUserMixin):
         return verify(password, self.password)
 
 
-UserOptional = generate_optional(User)
+class UserOptional(User):
+    pass
+
+
+make_optional(UserOptional)
 ```
 
 If you need a custom User model, you can copy/paste that code and add any field

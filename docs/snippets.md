@@ -12,9 +12,19 @@ for Python, Svelte and React. After successful installation of snippets, typing
 In the window that opens, copy the contents of python.json, svelte.json and
 typescript.json from the repository.
 
-## Lunar Vim
+## LunarVim
 
 You will need [jsregexp](https://github.com/kmarius/jsregexp) compiled and
 placed in the right directory. To find out the path of that directory, type
 `:lua print(package.cpath)`. The snippets should be cloned into
 `~/.config/lvim`.
+
+## NvChad
+
+Specify where to look for snippets by adding the following line to
+~/.config/nvim/lua:
+```
+vim.g.vscode_snippets_path = "~/repos/snippets"
+```
+
+Now clone snippets repository into `~/repos/snippets`, and that should be it.

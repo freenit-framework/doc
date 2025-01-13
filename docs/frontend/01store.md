@@ -1,15 +1,14 @@
 # Store
 
-If you already exported the design and want to integrate backend, you have to
-create store for it. Svelte has store and fetch built in, so simplest store for
-blog CRUD would be to make custom store:
+Svelte has state and fetch built into it, so simplest store for blog CRUD would
+be to make it like this:
 
 ```ts
 import { methods, store } from '.'
 
 export default class BlogStore {
   list = $state({})
-  detail = $state({})
+  detail = $state({ page: 0, perpage: 0, data: [], total: 0 })
 
   constructor(prefix) {
     this.prefix = prefix
@@ -17,15 +16,16 @@ export default class BlogStore {
 }
 
 ```
-This just declares `BlogStore` as custom store, with initial value of empty
-array. To get the list from the REST API, add `fetchAll` function inside
-`BlogStore`. To make things easier, Freenit comes with helper `methods`.
-Because arrow functions handle `this` better, it is wise to use them.
+This just declares `BlogStore` as a store, with initial values for
+`list` and `detail` state. To get the list of blog posts from the
+REST API, add `fetchAll` function inside `BlogStore`. To make things
+easier, Freenit comes with helper `methods`. Because arrow functions
+handle `this` better, it is wise to use them.
 
 ```ts
-fetchAll = async () => {
+fetchAll = async (page: Number = 1, perpage: Number = 10) => {
   await store.auth.refresh_token()
-  const response = await methods.get(`${this.prefix}/blogs`)
+  const response = await methods.get(`${this.prefix}/blogs`, { page, perpage })
   if (response.ok) {
     const data = await response.json()
     this.list = data
@@ -37,8 +37,11 @@ fetchAll = async () => {
 ```
 The `refresh_token` function is written so that if there is no token or the currently
 held token has expired it will call REST API to refresh it, otherwise it will do nothing.
-After fetching list of blogs `fetchAll` will set the store and return the data to the
-caller. To create the blog post, you need to add `create` function which calls
+After fetching list of blogs, `fetchAll` will set the store and return the data to the
+caller. By default we also tell backend to return first 10 blog posts by setting headers
+`page` and `perpage` in `methods.get` call.
+
+To create the blog post, you need to add `create` function which calls
 `POST` on the REST API.
 
 ```ts
@@ -101,9 +104,9 @@ import BlogStore from './blog'
 store.blog = new BlogStore(store.auth.prefix)
 ```
 
-So now in your code you would refer to it through global store.
+So now in your `.svelte` component you would refer to it through global store.
 ```ts
 import { store } from '@freenit-framework/core'
 
-console.log(store.blog.detail.id)
+console.log(store.blog.list.total)
 ```

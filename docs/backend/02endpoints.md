@@ -1,35 +1,35 @@
 # Endpoints
 
+## CRUD
 In `api` directory of your project add `blog.py` with the following content:
 ```py
-from typing import List
-
-import ormar
-from fastapi import Depends, HTTPException
-from freenit.decorators import description
-from freenit.models.user import User
-from freenit.permissions import user_perms
-from freenit.router import route
+import ormar.exceptions
+from fastapi import Header, HTTPException
+from freenit.api.router import route
+from freenit.models.pagination import Page, paginate
 
 from ..models.blog import Blog, BlogOptional
 
+tags = ["blog"]
 
-@route('/blogs', tags=['blog'])
-class BlogListAPI():
+
+@route("/blogs", tags=tags)
+class BlogListAPI:
     @staticmethod
-    @description("Get blog list")
-    async def get() -> List[Blog]:
-        return await Blog.objects.all()
+    async def get(
+        page: int = Header(default=1),
+        perpage: int = Header(default=10),
+    ) -> Page[Blog]:
+        return await paginate(Blog.objects, page, perpage)
 
     @staticmethod
-    async def post(blog: Blog, user: User = Depends(user_perms)) -> Blog:
-        blog.user = user
+    async def post(blog: Blog) -> Blog:
         await blog.save()
         return blog
 
 
-@route('/blogs/{id}', tags=['blog'])
-class BlogDetailAPI():
+@route("/blogs/{id}", tags=tags)
+class BlogDetailAPI:
     @staticmethod
     async def get(id: int) -> Blog:
         try:
@@ -48,14 +48,13 @@ class BlogDetailAPI():
         return blog
 
     @staticmethod
-    async def delete(id: str) -> Blog:
+    async def delete(id: int) -> Blog:
         try:
             blog = await Blog.objects.get(pk=id)
         except ormar.exceptions.NoMatch:
             raise HTTPException(status_code=404, detail="No such blog")
         await blog.delete()
         return blog
-
 ```
 What you have now is basic CRUD operations on your blog. Note that `@route` is
 Freenit's decorator to make it easy to write class based endpoints. As FastAPI
@@ -68,6 +67,10 @@ decorators is important and `@staticmethod` has to be the top one. The
 `@description` is not mandatory, but highly preferable. If no `@description` is
 given, default is to concatenate name of the method and first tag and use them
 as description.
+
+By default endpoint to get list of blog posts is paginated. That means that it 
+will return first page with first 10 results by default. Through `page` and
+`perpage` frontend can require other pages and the page size.
 
 Return value type hinting is important. It will tell Freenit what object is
 returned from the method and how to convert it to JSON. Alternatively, you can

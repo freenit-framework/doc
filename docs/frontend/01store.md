@@ -1,5 +1,6 @@
 # Store
 
+## Custom Store
 Svelte has state and fetch built into it, so simplest store for blog CRUD would
 be to make it like this:
 
@@ -110,3 +111,51 @@ import { store } from '@freenit-framework/core'
 
 console.log(store.blog.list.total)
 ```
+
+## Built-in Stores
+
+Freenit offers some ready made stores to make development easier. They are all part of
+a global store, so let's see what's included.
+
+### Auth
+
+Store to handle authentication. It has following methods:
+
+* `login(email, password)` - login with email and password
+* `logout()` - logout currently logged in user
+* `register(email, password)` - register new user and make it inactive
+* `verify(verification_token)` - on register, mail will be sent with verification token/URL
+* `refresh_token()` - refresh access token
+
+### Role
+
+Store to handle roles. It has following methods:
+
+* `fetchAll(page, perpage)` - fetch `perpage` roles at a time
+* `create(fields)` - create role from `fields` (JS object with role data)
+* `fetch(id)` - fetch single role
+* `edit(id)` - edit role
+* `destroy(id)` - destroy role
+* `assign(role_id, user_id)` - add user to role
+* `deassign(role_id, user_id)` - remove user from role
+
+### User
+
+Store to handle roles. It has following methods:
+
+* `fetchAll(page, perpage)` - fetch `perpage` users at a time
+* `create(fields)` - create user from `fields` (JS object with user data)
+* `fetch(id)` - fetch single user
+* `edit(id)` - edit user
+* `destroy(id)` - destroy user
+
+### Theme
+
+Store to handle themes. It has following methods:
+
+* `fetchAll(page, perpage)` - fetch `perpage` themes at a time
+* `create(fields)` - create theme from `fields` (JS object with theme data)
+* `fetch(id)` - fetch single theme
+* `edit(id)` - edit theme
+* `destroy(id)` - destroy theme
+* `active()` - fetch currently active theme

@@ -12,7 +12,7 @@ from freenit.models.role import Role
 class User(OrmarBaseModel, OrmarUserMixin):
     ormar_config = ormar_config.copy()
 
-    roles = ormar.ManyToMany(Role)
+    roles = ormar.ManyToMany(Role, unique=True)
 
     def check(self, password: str) -> bool:
         return verify(password, self.password)
@@ -26,7 +26,7 @@ make_optional(UserOptional)
 ```
 
 If you need a custom User model, you can copy/paste that code and add any field
-to User class you need. For example, let's say the project is name `myproject`
+to User class you need. For example, let's say the project name is `myproject`
 and custom User class is needed. In that case file `myproject/models/user.py`
 should look like this:
 

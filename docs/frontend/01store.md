@@ -13,15 +13,17 @@ export default class BlogStore {
 
   constructor(prefix) {
     this.prefix = prefix
+    store.blog = this
   }
 }
-
 ```
+
 This just declares `BlogStore` as a store, with initial values for
-`list` and `detail` state. To get the list of blog posts from the
-REST API, add `fetchAll` function inside `BlogStore`. To make things
-easier, Freenit comes with helper `methods`. Because arrow functions
-handle `this` better, it is wise to use them.
+`list` and `detail` state and attaches `blog` to global `store`.
+To get the list of blog posts from the REST API, add `fetchAll`
+function inside `BlogStore`. To make things easier, Freenit comes
+with helper `methods`. Because arrow functions handle `this` better,
+it is wise to use them.
 
 ```ts
 fetchAll = async (page: Number = 1, perpage: Number = 10) => {
@@ -95,17 +97,9 @@ destroy = async (id: Number) => {
 ```
 
 You can use `blog.detail` and `blog.list` in `.svelte` files like any other
-store. What will make it more flexible is to add blog store to the global Freenit
-store. To do that, have the following snippet of code added somewhere in your initialization
+store. So now in your `.svelte` component you would refer to it through
+global store.
 
-```ts
-import { store } from '@freenit-framework/core'
-import BlogStore from './blog'
-
-store.blog = new BlogStore(store.auth.prefix)
-```
-
-So now in your `.svelte` component you would refer to it through global store.
 ```ts
 import { store } from '@freenit-framework/core'
 
@@ -141,7 +135,7 @@ Store to handle roles. It has following methods:
 
 ### User
 
-Store to handle roles. It has following methods:
+Store to handle users. It has following methods:
 
 * `fetchAll(page, perpage)` - fetch `perpage` users at a time
 * `create(fields)` - create user from `fields` (JS object with user data)

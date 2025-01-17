@@ -122,7 +122,7 @@ class ProdConfig(BaseConfig):
     mail = Mail()
 ```
 
-Then in `myproject/config.py` write the following.
+Then in `myproject/myproject/config.py` you have the following.
 
 ```py
 import os
@@ -160,4 +160,11 @@ items. The idea behind `local_config.py` is to be able to override settings in p
 sensitive data is not distributed with the repository of the project. Also, if you need extra
 settings, you can add them in your base config to share with other configs, or just to the
 production config. For example, you might need Redis or some other external service to be
-configured.
+configured. The following code shows you how to change `secret` in production.
+
+```py
+from .base_config ProdConfig as BaseProdConfig
+
+class ProdConfig(BaseProdConfig):
+    secret = "WAYMORESECURESECRET"
+```

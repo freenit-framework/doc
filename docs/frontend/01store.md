@@ -2,18 +2,18 @@
 
 ## Custom Store
 Svelte has state and fetch built into it, so simplest store for blog CRUD would
-be to make it like this:
+be to make file `src/lib/store/blog.svelte.ts`:
 
 ```ts
-import { methods, store } from '.'
+import { methods } from '@freenit-framework/core'
+import store from '.'
 
 export default class BlogStore {
-  list = $state({})
-  detail = $state({ page: 0, perpage: 0, data: [], total: 0 })
+  list = $state({ page: 0, perpage: 0, data: [], total: 0 })
+  detail = $state({ id: 0, title: '', content: '' })
 
   constructor(prefix) {
     this.prefix = prefix
-    store.blog = this
   }
 }
 ```
@@ -96,12 +96,31 @@ destroy = async (id: Number) => {
 }
 ```
 
-You can use `blog.detail` and `blog.list` in `.svelte` files like any other
+Now all you need to do is initialize it with the rest of the store in `src/lib/store/index.ts`
+
+```ts
+import { BaseStore } from '@freenit-framework/core'
+import BlogStore from './blog.svelte'
+
+class Store extends BaseStore {
+  blog: BlogStore
+
+  constructor(prefix='/api/v1') {
+    super(prefix)
+    this.blog = new BlogStore(prefix)
+  }
+}
+
+const store = new Store()
+export default store
+```
+
+You can use `store.blog.detail` and `store.blog.list` in `.svelte` files like any other
 store. So now in your `.svelte` component you would refer to it through
 global store.
 
 ```ts
-import { store } from '@freenit-framework/core'
+import store from '$lib/store'
 
 console.log(store.blog.list.total)
 ```

@@ -19,11 +19,10 @@ export default class BlogStore {
 ```
 
 This just declares `BlogStore` as a store, with initial values for
-`list` and `detail` state and attaches `blog` to global `store`.
-To get the list of blog posts from the REST API, add `fetchAll`
-function inside `BlogStore`. To make things easier, Freenit comes
-with helper `methods`. Because arrow functions handle `this` better,
-it is wise to use them.
+`list` and `detail` states. To get the list of blog posts from the
+REST API, add `fetchAll` function inside `BlogStore`. To make things
+easier, Freenit comes with helper `methods`. Because arrow functions
+handle `this` better, it is wise to use them.
 
 ```ts
 fetchAll = async (page: Number = 1, perpage: Number = 10) => {
@@ -36,8 +35,8 @@ fetchAll = async (page: Number = 1, perpage: Number = 10) => {
   }
   return response
 }
-
 ```
+
 The `refresh_token` function is written so that if there is no token or the currently
 held token has expired it will call REST API to refresh it, otherwise it will do nothing.
 After fetching list of blogs, `fetchAll` will set the store and return the data to the
@@ -62,6 +61,7 @@ create = async (fields: Record<string, any>) => {
 
 It is similar with the blog detail and it's API calls. Here are the methods
 blog detail.
+
 ```ts
 fetch = async (id: Number) => {
   await store.auth.refresh_token()
@@ -116,8 +116,7 @@ export default store
 ```
 
 You can use `store.blog.detail` and `store.blog.list` in `.svelte` files like any other
-store. So now in your `.svelte` component you would refer to it through
-global store.
+store. So now in your `.svelte` component you would refer to it through global store.
 
 ```ts
 import store from '$lib/store'

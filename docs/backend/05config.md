@@ -168,3 +168,33 @@ from .base_config ProdConfig as BaseProdConfig
 class ProdConfig(BaseProdConfig):
     secret = "WAYMORESECURESECRET"
 ```
+
+!!! note 
+    Once in production, your code has to initialize the database, so don't forget to run
+    `bin/init.sh`.
+
+Once first user is registered, you probably want to promote them to admin. To do that, run
+`bin/shell.sh`.
+
+```python
+# bin/shell.sh
+
+from bsidesrs.config import getConfig
+
+config = getConfig()
+await config.database.connect()
+user = await User.objects.get(pk=1)
+await config.database.connect()
+```
+
+Every script in `bin` directory is aware of these environment variables
+
+* `FREENIT_ENV` - configuration to use like `prod`, `dev` or `test`
+* `SYSPKG` - don't use virtualenv and use system provided packages
+* `OFFLINE` - use virtualenv, but don't install or upgrade anything
+
+For example, you can run this to get shell in production using only system provided packages
+
+```
+env SYSPKG=YES FREENIT_ENV=prod bin/shell.sh
+```

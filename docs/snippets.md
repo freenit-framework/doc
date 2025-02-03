@@ -1,9 +1,9 @@
 # Snippets
 
-Snippets are templates fr portions of code. For example, you will probably make
+Snippets are templates for portions of code. For example, you will probably make
 DB models in the same way with only table/class name that is different. Freenit
 offers [repository with snippets](https://github.com/freenit-framework/snippets)
-for Python, Svelte and React. After successful installation of snippets, typing
+for Python, Svelte and Typescript. After successful installation of snippets, typing
 `freenit` will give you a menu with all snippets for that file type.
 
 ## VSCode

@@ -33,28 +33,33 @@ frontend, currently, but you can add more later).
 
 ```sh
 $ freenit
-Name of the project: myproject
+Name of the project: myproj
 Creating project
 Creating bin
 Creating services
 Creating backend
-Success! Please edit setup.py!
+Success!
 Creating frontend
-Which Svelte app template?
-  SvelteKit demo app
-Add type checking with TypeScript?
-  Yes, using TypeScript syntax
-Select additional options (use arrow keys/space bar)
-  Add ESLint for code linting
-  Add Prettier for code formatting
-  Add Vitest for unit testing
+Which template would you like?
+  SvelteKit minimal (barebones scaffolding for your new app)
+Add type checking with Typescript?
+  Yes, using Typescript syntax
+What would you like to add to your project? (use arrow keys / space bar)
+  prettier (formatter - https://prettier.io)
+  eslint (linter - https://eslint.org)
+  vitest (unit testing - https://vitest.dev)
+  sveltekit-adapter (deployment - https://svelte.dev/docs/kit/adapters)
+sveltekit-adapter: Which SvelteKit adapter would you like to use?
+  node (@sveltejs/adapter-node)
+Which package manager do you want to install dependencies with?
+  npm
 ```
 
 This will create the directory `myproject` and initialize it. Let's start the
 project.
 
 ```sh
-$ cd myproject
+$ cd myproj
 $ bin/devel.sh
 ```
 

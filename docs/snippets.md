@@ -8,9 +8,12 @@ for Python, Svelte and Typescript. After successful installation of snippets, ty
 
 ## VSCode
 
-`File -> Preferences -> Configure User Snippets -> New Global Snippets file`
-In the window that opens, copy the contents of python.json, svelte.json and
-typescript.json from the repository.
+Press `CTRL + P`, enter `ext install svelte.svelte-vscode` and press `Enter` to
+install Svelte extension. After that press `Shift + CTRL + P` and then enter `snip`.
+One of the choices in the drop-down menu will be `Snippets: Configure snippets`. When
+you click on it or press `Enter`, you'll be presented with another drop-down menu,
+this time it will contain list of languages. Select one by one languages: python,
+svelte, typescript and copy/paste content of `<language>.json` file.
 
 ## LunarVim
 

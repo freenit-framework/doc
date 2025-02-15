@@ -63,3 +63,5 @@ frontend. At that screen, you'll see URLs for both services. The interesting
 one is `http://localhost:5173`. If you visit it, it will greet you with a
 message `Landing Page in src/routes/+page.svelte`. That is usually the first
 page you will change.
+
+![image](img/init.gif)

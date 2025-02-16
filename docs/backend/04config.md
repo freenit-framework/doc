@@ -179,12 +179,10 @@ Once first user is registered, you probably want to promote them to admin. To do
 ```python
 # bin/shell.sh
 
-from bsidesrs.config import getConfig
+from freenit.models.user import User
 
-config = getConfig()
-await config.database.connect()
 user = await User.objects.get(pk=1)
-await config.database.connect()
+await user.update(admin=True)
 ```
 
 Every script in `bin` directory is aware of these environment variables

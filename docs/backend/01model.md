@@ -2,6 +2,7 @@
 
 Let's say you want to add the simplest model for blog post with only title and
 contents. In your project's `models` directory you need to create `blog.py`:
+
 ```py
 import ormar
 

@@ -1,7 +1,9 @@
 # Endpoints
 
 ## CRUD
+
 In `api` directory of your project add `blog.py` with the following content:
+
 ```py
 import ormar.exceptions
 from fastapi import Header, HTTPException

@@ -9,10 +9,11 @@ import { methods } from '@freenit-framework/core'
 import store from '.'
 
 export default class BlogStore {
+  prefix: string
   list = $state({ page: 0, perpage: 0, data: [], total: 0 })
   detail = $state({ id: 0, title: '', content: '' })
 
-  constructor(prefix) {
+  constructor(prefix: string) {
     this.prefix = prefix
   }
 }

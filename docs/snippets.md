@@ -20,7 +20,7 @@ svelte, typescript and copy/paste content of `<language>.json` file.
 You will need [jsregexp](https://github.com/kmarius/jsregexp) compiled and
 placed in the right directory. To find out the path of that directory, type
 `:lua print(package.cpath)`. The snippets should be cloned into
-`~/.config/lvim`.
+`~/.config/lvim/snippets`.
 
 ## NvChad
 

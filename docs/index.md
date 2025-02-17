@@ -31,7 +31,7 @@ The first thing to do is create the project itself. First, make sure you have
 `tmux` installed, as Freenit uses it to run different services (backend and
 frontend, currently, but you can add more later).
 
-```sh
+```
 $ freenit
 Name of the project: myproj
 Creating project

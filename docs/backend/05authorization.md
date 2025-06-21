@@ -1,6 +1,7 @@
 # Authorization
 
-## Default and Custom Model
+## SQL Model and Customization
+
 The default Freenit User is defined as this:
 ```py
 import ormar
@@ -95,3 +96,113 @@ Nice thing is that just swapping the User and/or Role class allows you to use
 Freenit's default API for auth, user, profile and roles. Of course, you can
 replace them, too, but if you only need extra few fields on your class, API
 overwrite is not needed.
+
+
+## OpenLDAP
+
+To use OpenLDAP based authentication, you need to tell Freenit where to find user and role, and
+how to connect to OpenLDAP server. To do that just for development, you can use the following
+snippet.
+
+```py
+from .base_config import DevConfig as DevConfigBase
+from freenit.base_config import LDAP
+
+class DevConfig(DevConfigBase):
+    user = "freenit.models.ldap.user"
+    role = "freenit.models.ldap.role"
+    ldap = LDAP(
+        host="ldap.example.com",
+        service_pw="mypass",
+    )
+```
+
+The `LDAP` class in Freenit has following arguments with their default arguments:
+
+
+```py
+host="ldap.example.com"
+tls=True
+service_dn="cn=freenit,dc=service,dc=ldap"
+service_pw=""
+roleBase="dc=group,dc=ldap"
+roleDN="cn={},{roleBase}"
+roleClasses=["groupOfUniqueNames"]
+roleMemberAttr="uniqueMember"
+groupDN="cn={},{domainDN},{roleBase}"
+groupClasses=["posixGroup"]
+userBase="dc=account,dc=ldap"
+userDN="uid={},{domainDN},{userBase}"
+userClasses=["pilotPerson", "posixAccount"]
+userMemberAttr="memberOf"
+uidNextClass="uidNext"
+uidNextDN="cn=uidnext,dc=ldap"
+uidNextField="uidNumber"
+gidNextClass="gidNext"
+gidNextDN="cn=gidnext,dc=ldap"
+gidNextField="gidNumber"
+domainDN="ou={}"
+domainClasses=["organizationalUnit", "pmiDelegationPath"]
+```
+
+Example of scheme that Freenit was made to work with is the following
+
+```ldap
+dn: dc=ldap
+objectClass: domain
+
+dn: cn=uidnext,dc=ldap
+objectClass: uidNext
+uidNumber: 10001
+
+dn: cn=gidnext,dc=ldap
+objectClass: gidNext
+gidNumber: 10001
+
+dn: dc=account,dc=ldap
+objectClass: domain
+
+dn: ou=example.com,dc=account,dc=ldap
+objectClass: organizationalUnit
+objectClass: pmiDelegationPath
+delegationPath: /etc/certs/example.com/privkey.pem
+delegationPath: /etc/certs/example.com/fullchain.pem
+
+dn: uid=admin,ou=example.com,dc=account,dc=ldap
+objectClass: pilotPerson
+objectClass: posixAccount
+cn: Admin
+sn: User
+uidNumber: 10000
+gidNumber: 10000
+homeDirectory: /var/mail/domains/example.com/admin
+mail: admin@example.com
+userClass: enabled
+
+dn: dc=group,dc=ldap
+objectClass: domain
+
+dn: ou=example.com,dc=group,dc=ldap
+objectClass: organizationalUnit
+
+dn: cn=admin,ou=example.com,dc=group,dc=ldap
+objectClass: posixGroup
+cn: admin
+gidNumber: 10000
+memberUid: 10000
+
+dn: dc=service,dc=ldap
+objectClass: domain
+
+dn: cn=freenit,dc=service,dc=ldap
+objectClass: person
+cn: Freenit
+sn: Service
+description: Freenit
+
+dn: cn=admin,dc=group,dc=ldap
+objectClass: groupOfUniqueNames
+cn: admin
+uniqueMember: uid=admin,ou=example.com,dc=account,dc=ldap
+uniqueMember: cn=freenit,dc=service,dc=ldap
+```

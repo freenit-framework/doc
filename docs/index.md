@@ -32,8 +32,7 @@ The first thing to do is create the project itself. First, make sure you have
 frontend, currently, but you can add more later).
 
 ```
-$ freenit
-Name of the project: myproj
+$ freenit myproj
 Creating project
 Creating bin
 Creating services
